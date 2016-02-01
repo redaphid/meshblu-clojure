@@ -12,26 +12,18 @@
   :url "https://meshblu.octoblu.com" :port 443
 })
 
-
-(defmacro  baseFn [f & [options]]
-  (list 'let (vector 'options (list 'merge meshblu-json options))
-    (list 'fn [] (list f 'options))
+(defn status [ & [options]]
+  "get the current status of meshblu"
+  (let [{:keys [url data]} (merge meshblu-json options)]
+   (:meshblu (:body (http/get (str url "/status") {:as :json})))
   )
 )
 
-(macroexpand '(baseFn status {}))
-((baseFn status {}))
-
-(defn status [{:keys [url]}]
-  "get the current status of meshblu"
-   (:meshblu (:body (http/get (str url "/status") {:as :json})))
-)
-
 (comment
-  (status meshblu-json)
+  (status)
 )
 
-(defn register [[& options]]
+(defn register [& [options]]
   "register a device with meshblu"
   (let [{:keys [url data]} (merge meshblu-json options)]
     (:body (http/post (str url "/devices") {:content-type :json :form-params data :as :json}))
@@ -39,7 +31,7 @@
 )
 
 (comment
-  (:type (register {:data {:type "clojure-test"}}))
+  (:uuid (register {:data {:type "clojure-test"}}))
 )
 
 (defn get-device [
