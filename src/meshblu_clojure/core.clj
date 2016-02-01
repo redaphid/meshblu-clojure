@@ -34,7 +34,9 @@
   (:uuid (register {:data {:type "clojure-test"}}))
 )
 
+
 (defn get-device [& [options]]
+  "get a device from meshblu"
   (let [{:keys [url uuid auth metadata]} (merge meshblu-json options)]
     (:body
       (http/get (str url "/v2/devices/" uuid)
