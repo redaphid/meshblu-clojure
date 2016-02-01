@@ -10,26 +10,23 @@
 
 (def meshblu-json {
   :url "https://meshblu.octoblu.com" :port 443
-  :uuid "" :token ""
 })
 
-(defn status [& [{:keys [url]}]]
-  (:meshblu (:body (http/get (str url "/status") {:as :json})))
+
+(defn status [& [options]]
+  (let [{:keys [url]} (merge meshblu-json options)]
+   (:meshblu (:body (http/get (str url "/status") {:as :json})))
+  )
+)
+
+(defn register [[& options]]
+  (let [{:keys [url data]} (merge meshblu-json options)]
+    (:body (http/post (str url "/devices") {:content-type :json :form-params data :as :json}))
+  )
 )
 
 (comment
-  (status {:url "https://meshblu.octoblu.com"})
-)
-
-
-(defn register [&
-  {:keys [url data metadata] :or {url "https://meshblu.octoblu.com"}}]
-  (:body (http/post (str url "/devices")
-    {:content-type :json :form-params data :as :json}))
-)
-
-(comment
-  (:type (register :data {:type "clojure-test"}))
+  (:type (register {:data {:type "clojure-test"}}))
 )
 
 (defn get-device [
