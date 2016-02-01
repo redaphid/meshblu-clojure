@@ -9,13 +9,21 @@
   (println "Hello, World!"))
 
 
-(defn status []
-  (:meshblu (:body (http/get "https://meshblu.octoblu.com/status" {:as :json})))
+(defn status [& {:keys [url metadata] :or {url "https://meshblu.octoblu.com"}}]
+  (:meshblu (:body (http/get (str url "/status") {:as :json})))
 )
-;(status)
 
-(defn register [& {data :data metadata :metadata}]
-  (:body (http/post "https://meshblu.octoblu.com/devices"
+(comment
+  (status)
+)
+
+
+(defn register [&
+  {:keys [url data metadata] :or {url "https://meshblu.octoblu.com"}}]
+  (:body (http/post (str url "/devices")
     {:content-type :json :form-params data :as :json}))
 )
-;(:test (register :data {:test true}))
+
+(comment
+  (:type (register :data {:type "clojure-test"}))
+)
