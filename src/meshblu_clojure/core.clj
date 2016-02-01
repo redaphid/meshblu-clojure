@@ -8,13 +8,17 @@
   [& args]
   (println "Hello, World!"))
 
+(def meshblu-json {
+  :url "https://meshblu.octoblu.com" :port 443
+  :uuid "" :token ""
+})
 
-(defn status [& {:keys [url metadata] :or {url "https://meshblu.octoblu.com"}}]
+(defn status [& [{:keys [url]}]]
   (:meshblu (:body (http/get (str url "/status") {:as :json})))
 )
 
 (comment
-  (status)
+  (status {:url "https://meshblu.octoblu.com"})
 )
 
 
@@ -27,3 +31,11 @@
 (comment
   (:type (register :data {:type "clojure-test"}))
 )
+
+(defn get-device [
+  {:keys [uuid token]} &
+  {:keys [url metadata uuid] :or {url "https://meshblu.octoblu.com" uuid auth-uuid}}]
+  {:body (http/get (str url "/devices/" ))}
+)
+
+(get-device)
