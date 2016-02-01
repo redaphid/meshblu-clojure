@@ -13,21 +13,18 @@
 })
 
 
-(defmacro hi [f options]
-  (list 'let ['url (list ':url options)]
-    (list f 'url)
+(defmacro  baseFn [f & [options]]
+  (list 'let (vector 'options (list 'merge meshblu-json options))
+    (list 'fn [] (list f 'options))
   )
 )
 
-(macroexpand '(hi println meshblu-json))
+(macroexpand '(baseFn status {}))
+((baseFn status {}))
 
-(hi println {:url "hi"})
-
-(defn status [& [options]]
+(defn status [{:keys [url]}]
   "get the current status of meshblu"
-  (let [{:keys [url]} (merge meshblu-json options)]
    (:meshblu (:body (http/get (str url "/status") {:as :json})))
-  )
 )
 
 (comment
