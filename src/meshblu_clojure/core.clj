@@ -39,7 +39,7 @@
   "get a device from meshblu"
   (let [{:keys [url uuid auth metadata]} (merge meshblu-json options)]
     (:body
-      (http/get (str url "/v2/devices/" uuid)
+      (http/get (str url "/v3/devices/" uuid)
       {:basic-auth (str (:uuid auth) ":" (:token auth)) :as :json})
     )
   )
