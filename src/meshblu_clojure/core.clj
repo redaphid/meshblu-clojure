@@ -8,8 +8,14 @@
   [& args]
   (println "Hello, World!"))
 
+
 (defn status []
   (:meshblu (:body (http/get "https://meshblu.octoblu.com/status" {:as :json})))
 )
 ;(status)
-(defn register )
+
+(defn register [& {data :data metadata :metadata}]
+  (:body (http/post "https://meshblu.octoblu.com/devices"
+    {:content-type :json :form-params data :as :json}))
+)
+;(:test (register :data {:test true}))
