@@ -34,10 +34,21 @@
   (:uuid (register {:data {:type "clojure-test"}}))
 )
 
-(defn get-device [
-  {:keys [uuid token]} &
-  {:keys [url metadata uuid] :or {url "https://meshblu.octoblu.com" uuid auth-uuid}}]
-  {:body (http/get (str url "/devices/" ))}
+(defn get-device [& [options]]
+  (let [{:keys [url uuid auth metadata]} (merge meshblu-json options)]
+    (:body
+      (http/get (str url "/v2/devices/" uuid)
+      {:basic-auth (str (:uuid auth) ":" (:token auth)) :as :json})
+    )
+  )
 )
 
-(get-device)
+(comment
+  (get-device {
+    :uuid "10fc2b3a-4e6d-4dda-8d4f-270a2305fb35"
+    :auth {
+      :uuid "10fc2b3a-4e6d-4dda-8d4f-270a2305fb35"
+      :token "dd211078aed58c5f8daffb3bbdbc783cdd4ac953"
+    }
+  })
+)
